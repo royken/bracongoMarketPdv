@@ -1,0 +1,14 @@
+<ion-view view-title="Produits">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+
+     <div class="list">
+       
+      <div ng-repeat="item in produits" >
+      <a class="item item-avatar item-text-wrap" ng-click="showImages($index)">
+        <img  src="{{item.image}}">
+      <h2>{{ item.nom }}</h2>
+      </a>
+    </div>
+      </div>
+  </ion-content>
+</ion-view>

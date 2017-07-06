@@ -1,0 +1,18 @@
+<ion-view view-title="Login" align-title="left" cache-view="false">
+    <ion-content style="background: url(img/Login.png) center; background-size: cover;" >
+        <div class="hero no-header flat">
+            
+        </div>
+        <div class="list" style="background-color: transparent important!;">
+             <ion-md-input placeholder="Nom" highlight-color="balanced" type="text" ng-model="loginData.nom" style="background-color: transparent important!;"></ion-md-input>
+            <ion-md-input placeholder="Utilisateur" highlight-color="balanced" type="text" ng-model="loginData.login"></ion-md-input>
+            <ion-md-input placeholder="E-mail" highlight-color="balanced" type="email" ng-model="loginData.mail"></ion-md-input >
+           <!-- <ion-md-input placeholder="Mot de passe" highlight-color="energized" type="password" ng-model="loginData.passwd"></ion-md-input> -->
+        </div>
+        <div class="padding">
+            <button ng-disabled="!loginData.nom || !loginData.mail || !loginData.login" ng-click="login()" class="button button-full  ink">Enregistrement</button>
+        </div>
+        <a  style="text-align:center; margin-left: auto; margin-right: auto; display: block; color: white;" href="" ng-click="accueil()"  target="_blank"><h3> Non Merci</h3></a>
+        
+    </ion-content>
+</ion-view>

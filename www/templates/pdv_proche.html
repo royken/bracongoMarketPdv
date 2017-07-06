@@ -1,0 +1,18 @@
+<ion-view view-title="Points de vente proches">
+  <button class="button button-fab button-fab-top-right button-assertive icon ion-location waves-effect waves-button waves-light" ng-click="showMap()"></button>
+  <ion-content class="contents"   style="padding: 3%">
+    
+   <div class="list card"   ng-repeat="p in pdvs" style="padding-bottom: 0%;">
+        <a href="#" class="item" style="margin-bottom: 0%; padding-bottom: 0%;">
+            {{p.nom}}
+        </a>
+        <div class="item" style="font-size: 10px; padding-bottom: 0%; margin-top: 0%; padding-top: 0%;">          
+                <i class="icon ion-location "></i>  {{p.adresse}}</br>
+                 <rating ng-model="rating.rate" max="{{rating.max}}" readonly="true"></rating>              
+          </div>  
+           
+      </div>
+      
+  </ion-content>
+</ion-view>
+

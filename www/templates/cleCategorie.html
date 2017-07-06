@@ -1,0 +1,37 @@
+<ion-view view-title="Produits Clé des Châteaux">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+  <ion-slide-box show-pager="true" auto-play="true" does-continue="true" >
+            <ion-slide ng-repeat="item in images">
+                <div class="box blue home-hello" ng-click="vm.showProductDetails(product)">
+                    <!--<img ng-src="{{product.image}}"/> -->
+                    <img ng-src="{{item.image}}" style="width:100%;height:100%" >
+                    <div class="item">
+                       
+                    </div>
+                </div>
+            </ion-slide>
+    </ion-slide-box>
+
+  <div class="row gallery">
+    <div class="col col-50 " ng-repeat="cat in categories">
+      <div class="card">
+        <div class="item item-image" ng-click="detailCat(cat.$id)">
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image" src="{{cat.image}}" style="height: 100%; width: 100%">
+            </div>
+           <div class="item" style="margin-top: 5px%;" ng-click="detailCat(cat.$id)">
+          <a  href="#/app/cleCategorie/{{cat.$id}}" class="subdued">
+                 {{cat.nom}}
+               </a>
+          </div>
+    </div>
+    </div>
+</div>
+<div  style="padding: 2%; margin-top: 2%">
+            <button class="button button-assertive button-icon icon ion-ios-location icon-right" ng-click="pageMap()" style="width: 80%; margin-left: 10%;background-color: #e42112">
+                  Nous Retrouver
+            </button>
+    </div>
+     
+  </ion-content>
+</ion-view>

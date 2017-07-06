@@ -1,0 +1,29 @@
+<ion-view view-title="Service Fête">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in" style="background-color: #ffffff;color: #000" >
+    <ion-slide-box show-pager="true" auto-play="true" does-continue="true" >
+            <ion-slide ng-repeat="item in images">
+                <div class=".box-fete blue home-hello" ng-click="vm.showProductDetails(product)">
+                    <!--<img ng-src="{{product.image}}"/> -->
+                    <img ng-src="{{item.image}}" style="width:100%;height:100%" >
+                    <div class="item">
+                       
+                    </div>
+                </div>
+            </ion-slide>
+    </ion-slide-box>
+    <div  style="background-color: #ffffff;color: #000;padding: 5%; margin-top: 0%;margin-bottom: 0%">
+    <div>
+    	Pour vos grands évènements, BRACONGO met à votre disposition son Service Fêtes
+    </div>
+    
+    <div  style="background-color: #ffffff;color: #000; margin-top: 2%;margin-bottom: 4%" >
+      <i class="icon ion-ios-email"></i>  servicefetes@bracongo.cd </br>
+      <i class="icon ion-ios-telephone"></i>  +243 828 500 056 
+    </div>
+     <div  style="margin: 0%; padding: 0%;">             
+        <a class="button button-full button-assertive ink" ng-click="openModal()"> Simulation Pro-forma</a>
+     </div>
+
+     </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,538 @@
+/* General
+==================================*/
+
+h1 {
+    color: #fff;
+    text-shadow: 0 1px 0px #000;
+    font-size: 42px;
+}
+
+.Myh1 {
+    color: #B71C1C;
+    /*text-shadow: 0 1px 0px #000;*/
+    font-size: 30px;
+}
+
+
+/* Utilities
+==================================*/
+
+.title-bordered {
+    border-top: solid 2px #bbb;
+    padding-top: 30px;
+}
+
+p {
+    color: #555;
+    margin: 0 0 25px;
+}
+
+.scroll {
+    height: 100%;
+}
+
+
+/* Menu
+==================================*/
+
+.menu .bar.bar-header.expanded {
+    transition: all .5s ease-in-out;
+}
+
+.menu-open .bar.bar-header.expanded {
+    background-color: #222;
+}
+
+.menu h2 {
+    bottom: 0;
+    font-size: 18px;
+    left: 16px;
+    position: absolute;
+}
+
+.menu .avatar {
+    height: 88px;
+    width: 88px;
+}
+
+.menu.menu-left * {
+    font-weight: bold;
+}
+
+.menu-open .ion-navicon {
+    transform: rotate(-360deg);
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.menu-open .ion-navicon:before {
+    content: "\f2ca";
+}
+
+.myMenu {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-left: none;
+    border-right: none;
+    min-height: 48px;
+    text-align: left;
+}
+
+
+/* Login
+==================================*/
+
+.app-icon {
+    background-color: #fff;
+    background: url('../img/logo_big.png') center;
+    background-size: cover;
+    border-radius: 50%;
+    height: 125px;
+    margin: 0 auto;
+    width: 125px;
+}
+
+.social-login {
+    position: fixed;
+    bottom: 0;
+}
+
+.hero.no-header {
+    height: 200px;
+}
+
+.timeline ul li {
+    list-style-type: none;
+    position: relative;
+    left: 4px;
+    ;
+    width: 4px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+    background: #444;
+}
+
+.timeline ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    transform: translateX(-45%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: inherit;
+}
+
+.timeline ul li div {
+    position: relative;
+    bottom: 0;
+    left: 35px;
+    width: 250px;
+    padding: 5px;
+    /* background: rgba(108, 141, 230, 1);*/
+}
+
+.timeline ul li div::before {
+    content: '';
+    left: -15px;
+    position: absolute;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 16px 8px 0;
+    border-color: transparent #444 transparent transparent;
+}
+
+.button.button-assertive {
+    border-color: #B71C1C;
+    background-color: #B71C1C;
+    color: #fff;
+}
+
+.bar-assertive {
+    border-color: #F44336;
+    background-color: #F44336;
+    color: #fff;
+}
+
+
+/* Menu de la page d'accueil*/
+
+#myHeader {}
+
+#fhm_page,
+.fhm_container {
+    /*position:absolute;
+  top:0;
+  right:0;
+  left:0;
+  bottom:0;
+  //margin-top: 6%;*/
+    height: 80%;
+}
+
+.fhm_row {
+    /* position: absolute;*/
+    height: 33%;
+    /*left:0;
+  right:0;*/
+    background-color: #F5F5F5;
+    clear: both;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    margin-bottom: 0%;
+    margin-top: 0%;
+}
+
+
+/*background-color: linear-gradient(to bottom, #939598, #dddddd);*/
+
+.fhm_item {
+    height: 33%%;
+    width: 33%;
+    /*background-color: #F5F5F5;*/
+    background-color: #F5F5F5;
+    border: 0px solid #F5F5F5;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-bottom: 1%;
+    margin-bottom: 1%;
+    margin-top: 0%;
+    margin-left: 0%;
+    margin-right: 0%;
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50 px;
+    color: black;
+    text-align: center;
+    border: 0 px solid #F5F5F5;
+    position: relative;
+    /*it can be fixed too*/
+    /*this to solve "the content will not be cut when the window is smaller than the content": */
+    /*   max-width:100%;
+        max-height:100%;*/
+}
+
+.sp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+    height: 10%;
+}
+
+
+/*For map*/
+
+.scroll {
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* For rating*/
+
+ul.rating li {
+    display: inline;
+    border: 0px;
+    background: none;
+    padding: 5px 3px;
+}
+
+ul.rating li i {
+    font-size: 15px;
+}
+
+.gallery {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+
+/******* Checkbox *******/
+
+.checkbox input:checked::before,
+.checkbox input:checked+.checkbox-icon::before {
+    background: #B71C1C;
+    border-color: #B71C1C;
+}
+
+.checkbox input:checked::before,
+.checkbox input:checked+.checkbox-icon::before {
+    background: #B71C1C;
+    border-color: #B71C1C;
+}
+
+.contents {
+    background-color: #F5F5F5;
+    color: #000;
+}
+
+
+/*
+h2 {
+    color: #000;
+}
+*/
+
+.MyH2 {
+    color: #000;
+}
+
+
+/*
+.item{
+ background-color: #222221;
+  color: #fff;
+}
+*/
+
+.myInput {
+    background-color: transparent;
+}
+
+#fhm_page {
+    background-color: #222221;
+    color: #fff;
+}
+
+.bar-assertive {
+    border-color: #F44336;
+    background-color: #F44336;
+    color: #fff;
+}
+
+ion-md-input {
+    background-color: transparent;
+}
+
+
+/*
+.bar,.bar-assertive,.bar-assertive-900{
+  background-color: #000000;
+}
+*/
+
+
+/*-------------------------GAME PUZZEL ----------------------------------*/
+
+table.game-3 {
+    width: 96%;
+    height: 96%;
+    margin: 2%;
+}
+
+table.game-3 td {
+    height: 32%;
+    width: 32%;
+    background: url("../img/simpson.jpg") no-repeat;
+    border: 1px black solid;
+    background-position: left top;
+}
+
+table.game-3 td:nth-child(1) {
+    background-position-x: -355%;
+}
+
+table.game-3 td:nth-child(2) {
+    background-position-x: 125%;
+}
+
+table.game-3 td:nth-child(3) {
+    background-position: 480% top;
+}
+
+.modale {
+    z-index: 500;
+    position: fixed;
+    width: 100%;
+    display: none;
+    height: 100%;
+    background: rgba(183, 47, 47, 0.34);
+}
+
+.modal-content {
+    width: 70%;
+    height: 20%;
+    background: linear-gradient(to bottom, white, wheat);
+    margin-top: 55%;
+    margin-left: 15%;
+    border-radius: 1%;
+    padding: 10px;
+    border: 2px solid white;
+}
+
+.modal-title {
+    text-align: center;
+    color: rgba(183, 47, 47, 0.5);
+    font-weight: 600;
+    text-shadow: -2px 1px 0px black;
+}
+
+.modal-choice {
+    margin-top: 10%;
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+}
+
+.modal-choice button {
+    display: inline;
+    width: 40%;
+    border: 2px solid white;
+    height: 25%;
+}
+
+.text-button {
+    margin-left: 10%;
+    font-weight: 600;
+    color: rgba(183, 47, 47, 0.5);
+    text-shadow: -2px 1px 0px black;
+}
+
+.modal-choice button.yes {
+    background: linear-gradient(to bottom, #90f9c8, #63ad84);
+}
+
+.modal-choice button.no {
+    background: linear-gradient(to bottom, #f99090, #ad6363);
+}
+
+
+/******************Youtube Videos***************/
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.title-image {
+    margin-top: 2px;
+    height: 40px;
+}
+
+.customized-image {
+    max-height: 100% !important;
+    max-width: 100% !important;
+}
+
+
+/*
+.list .item {
+    border: none;
+    min-height: 72px;
+    text-align: left;
+}
+*/
+
+.fete-hello {
+    height: 600px;
+    width: 100%;
+}
+
+.home-hello {
+    position: relative;
+}
+
+.home-hello .item {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border: 0;
+    padding-bottom: 40px;
+}
+
+.home-hello .item {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.box {
+    height: 20%;
+}
+
+.box-fete {
+    height: 30%;
+}
+
+.card .item:last-child,
+.list-inset .item:last-child {}
+
+.badge-container {
+    position: relative;
+}
+
+.image-modal {
+    width: 100% !important;
+    height: 40%;
+    top: 50px !important;
+    left: 0 !important;
+}
+
+.image {
+    width: 100%;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center, center;
+}
+
+.popup-container .popup {
+    width: 500px;
+}
+
+#accueil {
+    background-image: url('../img/fond2.jpg') center;
+}
+
+.myHeader{
+    background: url(../img/logo-01.png);
+    background-color: transparent;
+    background-size: 100% 100%;
+}
+
+.ion-header-bar.bar-custom.bar.bar-header.disable-user-behavior {
+background-image: url(http://buzapps.net/pages/wp-content/uploads/2016/12/knowledgebase_app_header_image_04.jpg);
+background-color: transparent;
+background-size: 100% 100%;
+}
+
+.myHeader .bar-assertive-900.bar.bar-header.disable-user-behavior{
+background-image: url(../img/logo-01.png);
+background-color: transparent;
+background-size: 100% 100%;
+}
+
+/*.modal{
+display: block;
+    position: absolute;
+    top: 0;
+    left:0;
+    z-index: 10;
+    overflow: hidden;
+    min-height: 25%;
+    width: 100%;
+    background-color: #fff;
+}*/

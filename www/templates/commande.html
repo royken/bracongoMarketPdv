@@ -1,0 +1,19 @@
+<ion-view view-title="Commande">
+    <ion-content ng-class="{expanded:isExpanded}">
+        <div class="list">
+            <div class="card" ng-repeat="item in produits">
+                <label class="item item-input">
+                <span class="input-label">{{item.nom}} : </span>
+                <label class="item item-input">
+                    <input type="number" placeholder="" ng-model="item.nombre" style="border-bottom: 1px solid gray; padding-right: 5%; ">
+                </label>
+                </label>
+            </div>
+        </div>
+        <div style="padding: 2%; margin-top: 2%">
+            <button class="button button-dark " ng-click="calculer()" style="width: 80%; margin-left: 10%;">
+                  Envoyer
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

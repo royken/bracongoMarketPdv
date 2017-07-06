@@ -1,0 +1,26 @@
+<ion-view view-title="Campagnes">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+
+  <div class="row gallery">
+  <div class="col col-50 " ng-repeat="campagne in campagnes">
+      <div class="card">
+<!--          href="#/app/event/{{event.$id}}"-->
+            <div class="item item-divider item-text-wrap">
+               <h4> {{campagne.titre}}</h4>
+            </div>
+            <div class="item item-image" ng-click="detailCampagne(campagne.$id)">
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image"  src="{{campagne.image}}">
+
+            </div>
+           <div class="item item-text-wrap" style="margin-bottom: 0px;padding: 0px 0px 0px 0px;margin: 0px 0px 0px 0px;">
+               <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{campagne.date}}</a>
+          </div> 
+           <div class=" item" style="margin-bottom: 0px;padding: 0px 0px 0px 0px;margin: 0px 0px 0px 0px;">             
+               <a class="button button-full button-assertive ink" href="#/app/campagne/{{campagne.$id}}"> Plus</a>
+            </div>
+      </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

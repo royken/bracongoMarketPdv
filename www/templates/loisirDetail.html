@@ -1,0 +1,32 @@
+<ion-view view-title="Détail Campagne">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+    <div class="hero slide-up" style="background-image: url('img/jazz_kiff.jpg');">
+            <div class="content">
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+            
+
+        </div>
+        <div style="text-align:justify; padding: 2%; " class="item item-text-wrap">
+            <h2>{{loisir.title}}</h2>
+           
+            <div class="item item-text-wrap" ng-bind-html="  {{loisir.description}}"></div>
+        </div>
+        <div  >
+            <a class="item item-icon-left" href="tel:{{loisir.contact}}"><i class="icon ion-ios-telephone"></i>{{loisir.contact}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-time"></i>{{loisir.heure}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-location-outline"></i>{{loisir.lieu}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-location"></i>{{loisir.adresse}}</a>
+        </div>
+        <div  >
+            <a class="item item-icon-left" ><i class="icon ion-ios-calendar"></i>{{loisir.date}}</a>
+        </div>
+        </ion-content>
+</ion-view>

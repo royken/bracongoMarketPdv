@@ -1,0 +1,30 @@
+<ion-view view-title="Identification">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="hero slide-up" style="background-color: #F84C61;">
+            <div class="content">
+                <div class="avatar" style="background-image: url('img/points-vente.png');"></div>
+                <h3><a class="light">{{customerInfos.nomClt}}</a></h3>
+                <h5><a class="light">{{customerInfos.codeClt}}</a></h5>
+            </div>
+        </div>
+
+        <div class="list card">
+
+            <a class="item item-icon-left"><i class="icon ion-person"></i>{{customerInfos.raisonSociale}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-home"></i>{{customerInfos.raisonSociale}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-location"></i>{{customerInfos.adresseClt}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-android-globe"></i>{{customerInfos.ville}}</a>
+
+
+            <a class="item item-icon-left"><i class="icon ion-ios-telephone"></i>{{customerInfos.tel}}</a>
+
+        </div>
+
+    </ion-content>
+</ion-view>

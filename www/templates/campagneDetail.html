@@ -1,0 +1,32 @@
+<ion-view view-title="Détail Campagne">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="hero slide-up" style="background-image: url({{campagne.image}});">
+            <div class="content">
+            </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+
+        </div>
+        <div style="text-align:justify; padding: 2%; ">
+            <h3>{{campagne.titre}}</h3>
+            <p ng-bind-html="campagne.description"></p>
+
+        </div>
+
+        <div class="card" ng-show="{{campagne.hasVideo}}">
+            <ion-item>
+                <div class="video-container">
+                    <iframe src="{{campagne.video}}" frameborder="0" width="560" height="315"></iframe>
+                </div>
+            </ion-item>
+        </div>
+        <!-- <iframe src="https://www.youtube.com/embed/gvI2ClWqHO0" frameborder="0" width="560" height="315"></iframe>-->
+        <!-- <youtube-video video-id="{{campagne.video}}" player-width="'560px'" player-height="'315px'"></youtube-video>-->
+        <div class="item item-image">
+            <img class="full-image" src="{{campagne.image}}">
+        </div>
+        <div>
+            <a class="item item-icon-left"><i class="icon ion-ios-calendar"></i>{{campagne.date}}</a>
+        </div>
+    </ion-content>
+</ion-view>

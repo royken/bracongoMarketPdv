@@ -1,0 +1,35 @@
+<ion-view view-title="Evenements">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+  
+     <ion-list  ng-repeat="act in events">
+        <div class="item card-item">
+            <div ui-sref="app.itemEvent({id: act.id})" class="card stable-bg ink ink-dark">
+                <div class="item  item-divider">                       
+                     <strong>{{act.titre}} </strong>                  
+                </div>
+                    <div class="item  item-body" style="width: 100%;padding: 0%;">
+                        <img src="img/toto.jpg" style="width: 100%"/>
+                    </div>
+                    <div class="card-footer text-center item-text-wrap item-divider" >
+                        <i class="icon ion-chatbubble positive"></i> 2
+                        <i class="icon ion-heart assertive"></i> 4
+                        <div class="pull-left">
+                            <i class="icon ion-clock"></i> 12 mins ago
+                        </div>
+                        <div>
+                          {{act.description}}-{{act.$id}}
+                        </div>
+                        <div class="padding">
+                          <h2> <a href="#/app/event/{{act.$id}}" class="event_title" >{{event.titre}}</a></h2>
+                          <h2> <a ui-sref="app.itemEvent({id: act.$id})" class="event_title" >{{act.description}}</a></h2>
+                          <a class="button button-full button-assertive ink" ng-click="detailEvent(act.$id)"> Plus</a>
+                        </div>
+                        
+                    </div>
+                
+            </div>
+        </div>
+      </ion-list>
+     
+  </ion-content>
+</ion-view>

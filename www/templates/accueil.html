@@ -1,0 +1,18 @@
+<ion-view view-title="Accueil" align-title="left">
+    <ion-content style="background: url(img/login.jpg) center; background-size: cover;">
+        <div class="hero no-header flat">
+            <div class="content">
+                <div class="app-icon"></div>
+                <h1>Thronester</h1>
+            </div>
+        </div>
+        <div class="list">
+            <ion-md-input placeholder="Username" highlight-color="balanced" type="text"></ion-md-input>
+            <ion-md-input placeholder="Password" highlight-color="energized" type="password"></ion-md-input>
+        </div>
+        <button ng-click="eventsPage()" class="button button-full button-assertive ink">Events</button>
+        <button ng-click="campagnesPage()" class="button button-full button-assertive ink">Campagnes</button>
+        <button ng-click="loisirsPage()" class="button button-full button-assertive ink">Loisirs</button>
+        <button ng-click="emploisPage()" class="button button-full button-assertive ink">Jobs</button>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,26 @@
+<div class="modal image-modal transparent" on-swipe-down="closeModal()" style="display: block;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    overflow: hidden;
+    min-height: 25%;
+    width: 100%;
+    background-color: #fff;">
+ <ion-slide-box  active-slide="activeSlide">
+    <ion-slide ng-repeat="item in produits">
+      <ion-scroll  scrollbar-x="false" scrollbar-y="false"
+      zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 20%;background-color: #444" delegate-handle="scrollHandle{{$index}}">
+      <div class="image" style="background-image: url( {{item.image}} )"></div>
+      <div class=" row item" style="border: none">
+      <div class=" col col-50 item item-text-wrap" style="border: none">
+        <h2 style="color: #ffffff; border: none !important; float: left; display: block;">{{item.nom}}</h2> 
+      </div>
+       <div class=" col col-50 item" style="border: none">
+        <button style="color: #fff;background-color: #e42112; float: right; display: block;" ng-click="gotoCampagne()" class="button button-small  button-positive "> Campagne </button>
+      </div>
+       
+      </div>
+   </ion-scroll>
+  </ion-slide>
+</ion-slide-box> 
+</div>

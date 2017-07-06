@@ -1,0 +1,35 @@
+<ion-view view-title="A Propos">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+  <ion-slide-box show-pager="true" auto-play="true" does-continue="true">
+			<ion-slide ng-repeat="product in products">
+				<div class="box blue home-hello" ng-click="vm.showProductDetails(product)" style="width:100%;height:20%">
+					<!--<img ng-src="{{product.image}}"/> -->
+					<img ng-src="{{product.image}}" style="width:100%;height:20%" >
+					<div class="item">
+						<h2 style="color: #000000;">{{product.title}}</h2>
+					</div>
+				</div>
+			</ion-slide>
+	</ion-slide-box>
+  
+<div style="height: 80%">
+<div class="row animated bounceInLeft " style="height: 30%">
+  <div class=" card col"><div class="item item-image" ui-sref="app.listEvent"><img src="img/menu/black/event.png"></div></div>
+  <div class="card col"><div class="item item-image" ng-click="campagnesPage()"><img src="img/menu/black/campagne.png"></div></div>
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/produits.png"></div></div>
+  
+</div>
+<div class="row" style="height: 30%">
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/cle.png"></div></div>
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/bar.png"></div></div>
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/fete.png"></div></div>
+  
+</div>
+<div class="row animated bounceInLeft" style="height: 30%">
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/concours.png"></div></div>
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/jobs.png"></div></div>
+  <div class="card col"><div class="item item-image"><img src="img/menu/black/infos.png"></div></div>
+</div>
+<div>
+  </ion-content>
+</ion-view>

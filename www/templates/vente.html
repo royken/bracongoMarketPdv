@@ -1,0 +1,33 @@
+<ion-view view-title="Remise">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+
+
+        <div class="card">
+
+            {{remise}}
+        </div>
+
+        <div class="card">
+            <div class="row header">
+                <div class="col">Mois</div>
+                <div class="col">Vente</div>
+            </div>
+            <div class="row" ng-repeat="data in histo">
+                <div class="col">{{data.mois}}</div>
+                <div class="col">{{data.quantite}}</div>
+            </div>
+
+
+        </div>
+        <div class="card">
+            <canvas class="chart chart-line" chart-data="data" chart-labels="labels" chart-click="onClick"></canvas>
+        </div>
+
+
+
+
+
+
+
+    </ion-content>
+</ion-view>

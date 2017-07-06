@@ -1,0 +1,65 @@
+<ion-modal-view>
+  <!-- <ion-header-bar class="bar-balanced"> -->
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">Remplir le formulaire</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeModal()">
+        <i class="icon ion-close"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content class= "splash">
+    <form ng-submit="postuler(user, motpass)">
+      <div class="row responsive-sm">
+        <div class="col">
+          <label class="item item-input">
+            <span class="input-label">Nom</span>
+            <input type="text" placeholder="Votre Nom" ng-model="nom">
+          </label>
+        </div>
+      </div> 
+      <div class="row responsive-sm">
+        <div class="col">
+          <label class="item item-input">
+            <span class="input-label">Prénom</span>
+            <input type="text" placeholder="Votre prénom" ng-model="prenom">
+          </label>
+        </div>
+      </div> 
+      <div class="row responsive-sm">
+        <div class="col">
+          <label class="item item-input">
+            <span class="input-label">Tél</span>
+            <input type="tel" placeholder="Votre No de Téléphone" ng-model="tel">
+          </label>
+        </div>
+      </div> 
+      <div class="row responsive-sm">
+        <div class="col">
+          <label class="item item-input">
+            <span class="input-label">Email</span>
+            <input type="email" placeholder="Votre email" ng-model="mail">
+          </label>
+        </div>
+      </div> 
+      <div class="row responsive-sm">
+        <div class="col">
+          <label class="item item-input">
+            <span class="input-label">Linked</span>
+            <input type="text" placeholder="Votre compte LinkedIn" ng-model="linkedin">
+          </label>
+        </div>
+      </div> 
+      <div class="row responsive-sm"> 
+        <div class="col">
+          <font color="red" ng-model="error">{{error}}</font>
+        </div>
+        <div class="col">
+          <button ng-disabled="!nom || !mail || !tel" class="button button-block button-assertive" type="submit" ng-click="envoyerMail(nom,prenom,mail,tel,linkedin)"> 
+               <i class="ion-android-send">Envoyer</i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

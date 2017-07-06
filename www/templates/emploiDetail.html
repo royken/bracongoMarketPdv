@@ -1,0 +1,33 @@
+<ion-view view-title="Détail Emploi">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="tabs tabs-dark  static">
+           
+            <a  class="tab-item">
+                <p style="color: white">{{emploi.titre}}</p>
+            </a>
+            
+
+        </div>
+        <div style="text-align:justify; padding: 2%; ">
+             <p ng-bind-html="emploi.description"></p>
+        </div>
+       
+         <div style="text-align:justify; padding: 2%; ">
+           <center> <strong > Misson</strong> </center>
+           <p ng-bind-html="emploi.mission"></p>
+        
+        </div>
+       <div style="text-align:justify; padding: 2%; ">
+            <center> <strong > Profil recherché</strong> </center> 
+             <p ng-bind-html="emploi.profil"></p>
+            
+        </div>
+       <div style="text-align:justify; padding: 2%; ">
+            Publié le : {{emploi.date}}
+        </div>
+
+        <div  >
+            <a class="button button-full button-assertive ink" ng-click="openModal()" >Postuler</a>
+        </div>
+        </ion-content>
+</ion-view>

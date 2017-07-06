@@ -1,0 +1,59 @@
+<ion-view view-title="Simulation pro-forma">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+
+  <label class="item item-input">
+   <input type="text" placeholder="Nombre de places" ng-model="nbrPlace"> 
+   </label>
+   <ion-checkbox ng-model="biere">Bière</ion-checkbox>
+   		<div ng-show="biere">
+   			<ion-checkbox ng-model="casier">Casier</ion-checkbox> 
+   			<div ng-show="casier">
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Beaufort" ng-model="nbrCasierBeau"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Castel" ng-model="nbrCasierCastel">
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Doppel" ng-model="nbrCasierDoppel"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Castel" ng-model="nbrCasierCastel"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Nkoyi" ng-model="nbrCasierNkoyi"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Nkoyi Black" ng-model="nbrCasierNkoyiBlaclk"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Tembo" ng-model="nbrCasierTembo"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Casiers Skol" ng-model="nbrCasierSkol"> 
+   					</label>
+   				</div>
+   			<ion-checkbox ng-model="pression">Pression</ion-checkbox>
+   				<div ng-show="pression">
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Fût Tembo" ng-model="nbrFutTembo"> 
+   					</label>
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre Fût Skol" ng-model="nbrFutSkol"> 
+   					</label>
+   				</div>
+   		</div>
+
+   		<ion-checkbox ng-model="bg">Boisson Gazeuse</ion-checkbox>
+   			<div ng-show="bg">
+   					<label class="item item-input">
+   						<input type="text" placeholder="Nombre casiers" ng-model="nbrCasierBg"> 
+   					</label>
+   			</div>
+
+   		<div class=" item" style="margin: 0%; padding: 0%;" tappable>             
+        <a class="button button-full button-assertive ink" ng-click="calculer()" type="submit"> Simulation Pro-forma</a>
+     </div>
+     
+  </ion-content>
+</ion-view>

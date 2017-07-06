@@ -1,0 +1,21 @@
+<ion-view view-title="Nos Produits">
+  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+ 
+ <div class="row gallery">
+    <div class="col col-50 " ng-repeat="cat in categories">
+      <div class="card">
+        <div class="item item-image" ng-click="listProduit(cat.$id)">
+<!--                href="#/app/event/{{event.$id}}"-->
+                <img class="full-image" src="{{cat.image}}" style="height: 100%; width: 100%">
+            </div>
+           <div class="item s" style="margin-top: 5px%;">
+          <a  href="#/app/produits/{{cat.$id}}" class="subdued">
+                 {{cat.nom}}
+               </a>
+          </div>
+    </div>
+    </div>
+</div>
+  </ion-content>
+</ion-view>
+

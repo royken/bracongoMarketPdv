@@ -1,0 +1,61 @@
+<ion-modal-view>
+    <!-- <ion-header-bar class="bar-balanced"> -->
+    <ion-header-bar class="bar-dark">
+        <h1 class="title">Remplir le formulaire</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeModal()">
+        <i class="icon ion-close"></i>
+      </button>
+        </div>
+    </ion-header-bar>
+    <ion-content class="splash">
+        <form>
+            <div ng-show="prixUnique<0">
+                <div class="row responsive-sm" style="border: 0px 0px 0px 0px !important white;">
+                    <div class="col" style="border: 0px 0px 0px 0px !important white;">
+                        <label class="item item-input">
+            <input type="number" placeholder="Nombre d'invités" ng-model="loginData.nbrPlace"  ng-required="true" ng-minlength="1" >
+          </label>
+                    </div>
+                </div>
+
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <button class="button button-block button-assertive ink" type="submit" ng-click="prixGlobal()" ng-disabled="!(loginData.nbrPlace) || (loginData.nbrPlace < 1)"> 
+          Calculer
+          </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col" ng-show="prixUnique>0">
+                <button class="button button-block button-assertive  ink" type="submit" ng-click="reinitialier()"> 
+          Reinitialiser
+          </button>
+            </div>
+            <div class="row responsive-sm" ng-show="prixUnique>0">
+                <p class="alert alert-success" style="text-align: left">
+                    Pour {{loginData.nbrPlace}} places, prévoir environ </strong>{{prixG}}$ </strong>. Vous aurez droit à: </br>
+                    - Hotesses </br>
+                    - Barmans </br>
+                    - Boisson </br>
+                    - Tables </br>
+                    - Chaises </br>
+                    - Verres </br>
+                    - Plateaux </br>
+                    - Mise en place 2h avant l'évènement et nettoyage après évènement</br>
+                </p>
+                <p class="alert alert-success" style="text-align: left">
+                    Bien vouloir contacter le Service fête pour plus amples informations. </br>
+                    Vous pouvez aussi envoyer votre commande en cliquant sur le bouton ci-dessous.</br>Merci
+                </p>
+            </div>
+
+            <div class="row responsive-sm" ng-show="prixUnique>0">
+                <button class="button button-block button-dark  ink" type="submit" ng-click="showPopup()"> 
+          <i class="ion-android-send"> Envoyer la Commande</i>
+          </button>
+            </div>
+        </form>
+
+    </ion-content>
+</ion-modal-view>
