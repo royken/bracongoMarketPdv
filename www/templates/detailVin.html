@@ -1,20 +1,20 @@
 <ion-view view-title="Détail Vin">
-  <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
-    <div class="hero slide-up" style="background-image: url(data:image/jpeg;base64,{{vin.image}});">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="hero slide-up" style="background-image: url(data:image/jpeg;base64,{{vin.image}});">
             <div class="content">
             </div>
         </div>
         <div class="tabs tabs-dark tabs-icon-top static">
-           
+
         </div>
         <div style="text-align:justify; padding: 2%; ">
             <h2>{{vin.nom}}</h2>
             {{event.description}}
         </div>
-        <div class="item" >
+        <div class="item">
             <div class="list" ng-repeat="p in vin.prix" style="margin-bottom:2px; ">
-                 {{p.volume}} : {{p.valeur}} FC
+                {{p.volume}} : {{p.valeur}} FC
             </div>
-         </div>
-        </ion-content>
+        </div>
+    </ion-content>
 </ion-view>

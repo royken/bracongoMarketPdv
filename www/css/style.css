@@ -84,7 +84,7 @@ p {
 
 .app-icon {
     background-color: #fff;
-    background: url('../img/logo_big.png') center;
+    background: url('../img/logo.png') center;
     background-size: cover;
     border-radius: 50%;
     height: 125px;
@@ -189,7 +189,7 @@ p {
 /*background-color: linear-gradient(to bottom, #939598, #dddddd);*/
 
 .fhm_item {
-    height: 33%%;
+    height: 33%;
     width: 33%;
     /*background-color: #F5F5F5;*/
     background-color: #F5F5F5;
@@ -507,32 +507,137 @@ table.game-3 td:nth-child(3) {
     background-image: url('../img/fond2.jpg') center;
 }
 
-.myHeader{
+.myHeader {
     background: url(../img/logo-01.png);
     background-color: transparent;
     background-size: 100% 100%;
 }
 
-.ion-header-bar.bar-custom.bar.bar-header.disable-user-behavior {
-background-image: url(http://buzapps.net/pages/wp-content/uploads/2016/12/knowledgebase_app_header_image_04.jpg);
-background-color: transparent;
-background-size: 100% 100%;
+.myHeader .bar-assertive-900.bar.bar-header.disable-user-behavior {
+    background-image: url(../img/logo-01.png);
+    background-color: transparent;
+    background-size: 100% 100%;
 }
 
-.myHeader .bar-assertive-900.bar.bar-header.disable-user-behavior{
-background-image: url(../img/logo-01.png);
-background-color: transparent;
-background-size: 100% 100%;
+.center-text-header {
+    text-align: center;
+    background-color: #B71C1C;
+    color: #ffffff !important;
 }
 
-/*.modal{
-display: block;
-    position: absolute;
-    top: 0;
-    left:0;
-    z-index: 10;
-    overflow: hidden;
-    min-height: 25%;
-    width: 100%;
-    background-color: #fff;
-}*/
+.center-text-remise {
+    text-align: center;
+    background-color: #DDDDDD;
+}
+
+.center-text-content {
+    text-align: center;
+}
+
+.pane {
+    background-color: #464646!important;
+}
+
+.bar.bar-stable .title {
+    color: #FFF!important;
+}
+
+ion-header-bar.bar-assertive-900 {
+    background-color: #464646!important;
+    color: #FFF!important;
+}
+
+
+/* Commandes spéciales
+===================================================== */
+
+[class^="cols-"],
+[class*="cols-"] {
+    float: left;
+    display: inline-block;
+    position: relative;
+}
+
+.block {
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.74);
+}
+
+.cols-12 {
+    width: 98%;
+    margin: 1%;
+}
+
+.cols-6 {
+    width: 45%;
+}
+
+.cols-3 {
+    width: 32%;
+}
+
+.cols-2 {
+    width: 21%;
+}
+
+.logo {
+    width: 80%;
+    height: 80%;
+    margin: 5px 0px 2px 10px;
+}
+
+.occur:before {
+    content: " X ";
+}
+
+p {
+    font-family: sans-serif;
+    margin: 0px;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+[class*="btn-"] {
+    background: #f73636;
+    color: white;
+    font-weight: 800;
+    line-height: 2;
+    font-size: medium;
+    font-family: cursive;
+    border: 1px solid #f74;
+}
+
+.btn-add {
+    text-align: center;
+    margin: 13% 2px;
+    min-height: 35px;
+}
+
+.btn-total {
+    font-family: monospace;
+}
+
+.name {
+    font-weight: 600;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+.price {
+    color: #f74848;
+}
+
+.left {
+    float: left;
+}
+
+.rigth {
+    float: right;
+}
+
+.blue {
+    background: #e7ecef;
+}
+
+.white {
+    background: white;
+}

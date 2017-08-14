@@ -1,33 +1,83 @@
 <ion-view view-title="Remise">
     <ion-content class="contents" ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
 
+        <div ng-show=" loaded > 0">
 
-        <div class="card">
-
-            {{remise}}
-        </div>
-
-        <div class="card">
-            <div class="row header">
-                <div class="col">Mois</div>
-                <div class="col">Vente</div>
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff">Remise</h2>
+                </div>
+                <div class="item item-divider center-text-remise">
+                    <h1 style="color: #000000;"> {{remise}} FC </h1>
+                </div>
+                <div class="item item-text-wrap ">
+                    Votre remise cumulée à ce jour est de <strong>{{remise}} FC </strong>* sur la base d'un chiffre d'affaire de <strong>{{chiffreAffaire}} FC </strong>*. Cette valeur a été calculée entre le {{dateDebut | date: 'dd/MM/yyyy'}} et le {{datefin
+                    | date: 'dd/MM/yyyy'}}<br> *sous réserve de vérifications
+                </div>
             </div>
-            <div class="row" ng-repeat="data in histo">
-                <div class="col">{{data.mois}}</div>
-                <div class="col">{{data.quantite}}</div>
+
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff"> Historique des achats du mois</h2>
+                </div>
+                <div class="item item-text-wrap center-text-content">
+                    <div class="row header">
+                        <div class="col">Jour</div>
+                        <div class="col">Bière</div>
+                        <div class="col">BG</div>
+                        <div class="col">PET</div>
+                        <div class="col">Chiffre d'Affaire</div>
+                    </div>
+                    <div class="row" ng-repeat="data in hitoJours">
+                        <div class="col">{{data.date}}</div>
+                        <div class="col">{{data.quantiteBiere}}</div>
+                        <div class="col">{{data.quantiteBg}}</div>
+                        <div class="col">{{data.quantitePet}}</div>
+                        <div class="col">{{data.chiffreBierre + data.chiffreBg + data.chiffrePet}}</div>
+                    </div>
+                </div>
+
             </div>
 
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff"> Evolution Journalière </h2>
+                </div>
+                <div class="item item-text-wrap center-text-content">
+                    <canvas class="chart chart-line" chart-data="dataJourGraph" chart-labels="labelsJour" chart-click="onClick" legend="true" series="series" options="options"></canvas>
+                </div>
+            </div>
 
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff"> Historique des achats</h2>
+                </div>
+                <div class="item item-text-wrap center-text-content">
+                    <div class="row header">
+                        <div class="col">Mois</div>
+                        <div class="col">Bière</div>
+                        <div class="col">BG</div>
+                        <div class="col">PET</div>
+                        <div class="col">Chiffre d'Affaire</div>
+                    </div>
+                    <div class="row" ng-repeat="data in histo">
+                        <div class="col">{{getMonthByNumber(data.date)}}</div>
+                        <div class="col">{{data.quantiteBiere}}</div>
+                        <div class="col">{{data.quantiteBg}}</div>
+                        <div class="col">{{data.quantitePet}}</div>
+                        <div class="col">{{data.chiffreBierre + data.chiffreBg + data.chiffrePet}}</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff"> Evolution Mensuelle </h2>
+                </div>
+                <div class="item item-text-wrap center-text-content">
+                    <canvas class="chart chart-line" chart-data="dataMoisGraph" chart-labels="labels" chart-click="onClick" legend="true" series="series" options="options"></canvas>
+                </div>
+            </div>
         </div>
-        <div class="card">
-            <canvas class="chart chart-line" chart-data="data" chart-labels="labels" chart-click="onClick"></canvas>
-        </div>
-
-
-
-
-
-
-
     </ion-content>
 </ion-view>

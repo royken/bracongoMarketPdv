@@ -170,7 +170,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 
 
     // $scope.products = serviceFactory.getAllAccueilImages()
-    $scope.products = [{ titre: 'SKOL MOLANGI YA MBOKA', image: 'img/accueil/skol-3.png' }, { titre: "D'JINO EXPLOSION FRUITEE", image: 'img/accueil/djino.jpg' }]
+    $scope.products = [{ titre: 'SKOL MOLANGI YA MBOKA', image: 'img/accueil/skol-3.png' }, { titre: "D'JINO EXPLOSION FRUITEE", image: 'img/accueil/djino.jpg' }, { titre: "MEDAILLE YA MUTUYA", image: 'img/accueil/nkoyi.jpg' }, { titre: "FRAICHEUR NATURELLE", image: 'img/accueil/top.jpg' }]
 
     serviceFactory.getAllAccueilImages().$loaded().then(function(data) {
             // $scope.events = data
@@ -236,6 +236,9 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.ventePage = function() {
         $state.go('app.vente');
     }
+    $scope.plaintePage = function() {
+        $state.go('app.plainte');
+    }
 
     /*      $cordovaBadge.clear().then(function() {
                   // You have permission, badge cleared.
@@ -246,16 +249,29 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     ionicMaterialInk.displayEffect()
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast) {
+.controller('LoginCtrl', function($scope, $timeout, $ionicLoading, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast, BackendApi, $ionicPopup) {
         $scope.$parent.clearFabs()
         $scope.loginData = {}
         $scope.isExpanded = false
         $scope.hasHeaderFabLeft = false
         $scope.hasHeaderFabRight = false
+        $scope.loginResult = null
+        Application.setInitialRun(true);
         $timeout(function() {
             $scope.$parent.hideHeader()
         }, 0)
         ionicMaterialInk.displayEffect()
+
+        function show() {
+            $ionicLoading.show({
+                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                animation: 'fade-in',
+            });
+        };
+
+        function hide() {
+            $ionicLoading.hide();
+        };
 
         $scope.accueil = function() {
             var refEvent = firebase.database().ref().child('users')
@@ -265,7 +281,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 login: 'anonyme',
                 date: new Date()
             }
-            Application.setInitialRun(false)
+
             refEvent.push(objet)
             $ionicHistory.nextViewOptions({
                 disableAnimate: true,
@@ -280,22 +296,152 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             if (Connectivity.ifOffline()) {
                 $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             } else {
-                Application.registerUser($scope.loginData.login, $scope.loginData.mail, $scope.loginData.nom)
-                var refUsers = firebase.database().ref().child('users')
-                var objet = {
-                    nom: $scope.loginData.nom,
-                    mail: $scope.loginData.mail,
-                    login: $scope.loginData.login,
-                    date: new Date()
-                }
-                Application.setInitialRun(false)
-                refUsers.push(objet)
-                $ionicHistory.nextViewOptions({
-                    disableAnimate: true,
-                    disableBack: true
+                show();
+                BackendApi.createAccount($scope.loginData.compte, $scope.loginData.password).then(function(result) {
+                    console.log("received : ", JSON.stringify(result));
+
+                    $scope.success = result.data.success;
+                    hide();
+                    if ($scope.success === true) {
+                        $scope.loginResult = result.data.payload;
+                        if ($scope.loginResult.status == 0) {
+                            console.log("values :", $scope.loginResult.numclient);
+                            console.log("values1 :", $scope.loginResult.message);
+                            Application.setNumeroCompte($scope.loginResult.numclient);
+                            Application.setPassword($scope.loginResult.message);
+                            $ionicHistory.nextViewOptions({
+                                disableAnimate: true,
+                                disableBack: true
+                            })
+                            Application.setInitialRun(false);
+                            $state.go('app.accueil')
+                        }
+                        if ($scope.loginResult.status == 1) {
+                            //showPopup("Erreur", "Compte déjà créé");
+                            Application.setNumeroCompte($scope.loginResult.numclient);
+                            Application.setPassword($scope.loginResult.message);
+                            $ionicHistory.nextViewOptions({
+                                disableAnimate: true,
+                                disableBack: true
+                            })
+                            Application.setInitialRun(false);
+                            $state.go('app.accueil');
+                        }
+                        if ($scope.loginResult.status == 2) {
+                            Application.setInitialRun(true);
+                            showPopup("Erreur", $scope.loginResult.message);
+                        }
+                    } else {
+                        Application.setInitialRun(true);
+                        showPopup("Erreur", "Une erreur s'est produise, veuillez réessayer plus tard");
+                    }
+                    console.log("RESULT " + JSON.stringify($scope.loginResult));
+
                 })
-                $state.go('app.accueil')
+
             }
+        }
+
+        function showPopup(title, template) {
+            var alertPopup = $ionicPopup.alert({
+                title: title,
+                template: template
+            })
+            alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone')
+            })
+        }
+    })
+    .controller('Login2Ctrl', function($scope, $timeout, $ionicLoading, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast, BackendApi, $ionicPopup) {
+        $scope.$parent.clearFabs()
+        $scope.loginData = {}
+        $scope.isExpanded = false
+        $scope.hasHeaderFabLeft = false
+        $scope.hasHeaderFabRight = false
+        $scope.loginResult = null
+        $scope.numero = null;
+        $timeout(function() {
+            $scope.$parent.hideHeader()
+        }, 0)
+        ionicMaterialInk.displayEffect()
+
+        Application.getNumeroCompte().then(function(value) {
+            $scope.numero = value
+        })
+
+        function show() {
+            $ionicLoading.show({
+                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                animation: 'fade-in',
+            });
+        };
+
+        function hide() {
+            $ionicLoading.hide();
+        };
+
+
+
+        $scope.login = function() {
+            // console.log("credentials",$scope.loginData)
+
+            if (Connectivity.ifOffline()) {
+                $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
+            } else {
+                show();
+                BackendApi.createAccount($scope.numero, $scope.loginData.password).then(function(result) {
+                    console.log("received : ", JSON.stringify(result));
+
+                    $scope.success = result.data.success;
+                    hide();
+                    if ($scope.success === true) {
+                        $scope.loginResult = result.data.payload;
+                        if ($scope.loginResult.status == 0) {
+                            console.log("values :", $scope.loginResult.numclient);
+                            console.log("values1 :", $scope.loginResult.message);
+                            Application.setNumeroCompte($scope.loginResult.numclient);
+                            Application.setPassword($scope.loginResult.message);
+                            $ionicHistory.nextViewOptions({
+                                disableAnimate: true,
+                                disableBack: true
+                            })
+                            Application.setInitialRun(false);
+                            $state.go('app.accueil')
+                        }
+                        if ($scope.loginResult.status == 1) {
+                            //showPopup("Erreur", "Compte déjà créé");
+                            Application.setNumeroCompte($scope.loginResult.numclient);
+                            Application.setPassword($scope.loginResult.message);
+                            $ionicHistory.nextViewOptions({
+                                    disableAnimate: true,
+                                    disableBack: true
+                                })
+                                // Application.setInitialRun(false);
+                            $state.go('app.accueil');
+                        }
+                        if ($scope.loginResult.status == 2) {
+                            Application.setInitialRun(true);
+                            showPopup("Erreur", $scope.loginResult.message);
+                        }
+                    } else {
+                        Application.setInitialRun(true);
+                        showPopup("Erreur", "Une erreur s'est produise, veuillez réessayer plus tard");
+                    }
+                    // console.log("RESULT " + JSON.stringify($scope.loginResult));
+
+                })
+
+            }
+        }
+
+        function showPopup(title, template) {
+            var alertPopup = $ionicPopup.alert({
+                title: title,
+                template: template
+            })
+            alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone')
+            })
         }
     })
     .controller('RealiteCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
@@ -1284,7 +1430,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                         },
                         'Commande Service Fête : ' + $scope.data.nom, // Subject
                         message, // Body
-                        ['servicefete@bracongo.cd'], // To
+                        ['servicefetes@bracongo.cd'], // To
                         null, // CC
                         null, // BCC
                         false, // isHTML
@@ -1435,36 +1581,146 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Activate ink for controller
         ionicMaterialInk.displayEffect()
     })
-    .controller('CommandeCtrl', function($scope, $state, ionicMaterialMotion, ionicMaterialInk) {
+    .controller('CommandeCtrl', function($scope, $http, $ionicLoading, $state, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Connectivity, $cordovaToast, Application, $ionicPopup, BackendApi) {
         $scope.$parent.showHeader();
         $scope.$parent.clearFabs();
         $scope.isExpanded = true;
         $scope.$parent.setExpanded(true);
         $scope.$parent.setHeaderFab('right');
+        $scope.sommeTotale = 0;
+        $scope.quantiteTotale = 0;
+        $scope.loaded = 0;
+        $scope.produits = [];
+        $scope.items = [];
+        $scope.commande;
+        $scope.numero = null;
+        $scope.message = "";
+        $scope.now = new Date();
+        Date.prototype.addDays = function(days) {
+            var dat = new Date(this.valueOf());
+            dat.setDate(dat.getDate() + days);
+            return dat;
+        }
+        $scope.day2 = $scope.now.addDays(2);
 
-        $scope.produits = [
 
-            { nom: "NKOYI 65 CL", prixU: 900, nombre: "" },
-            { nom: "NKOYI 33 CL", prixU: 1000, nombre: "" },
-            { nom: "TEMBO 65 CL", prixU: 300, nombre: "" },
-            { nom: "TEMBO 33 CL", prixU: 400, nombre: "" },
-            { nom: "NKOYI BLACK 65 CL", prixU: 750, nombre: "" },
-            { nom: "NKOYI BLACK 50 CL", prixU: 850, nombre: "" },
-            { nom: "NKOYI BLACK 33 CL", prixU: 650, nombre: "" },
-            { nom: "33 EXPORT 50 CL", prixU: 750, nombre: "" },
-            { nom: "BEAUFORT LAGER 33 CL", prixU: 850, nombre: "" },
-            { nom: "D 'JINO GRENADINE 60 CL", prixU: 550, nombre: "" },
-            { nom: "WORLD COLA 50 CL", prixU: 1150, nombre: "" },
-            { nom: "TOP TROPICAL 50 CL", prixU: 1350, nombre: "" },
-            { nom: "MALTA 33 CL", prixU: 1550, nombre: "" },
-            { nom: "D 'JINO ANANAS 30 CL", prixU: 1700, nombre: "" },
-            { nom: "D 'JINO GRENADINE 30 CL", prixU: 1500, nombre: "" },
-            { nom: "D 'JINO ORANGE 30 CL", prixU: 1650, nombre: "" }
-        ];
+        Application.getNumeroCompte().then(function(value) {
+            $scope.numero = value
+        })
+
+
+        if (Connectivity.ifOffline()) {
+            $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
+            $state.go('app.accueil')
+        } else {
+            show()
+            serviceFactory.getAllPrixProduit().$loaded().then(function(data) {
+                $scope.produits = data;
+                $scope.loaded = 1;
+                hide();
+            })
+        }
+
+        function show() {
+            $ionicLoading.show({
+                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                animation: 'fade-in'
+            })
+        }
+
+        function hide() {
+            $ionicLoading.hide()
+        }
+
+
+        $scope.addOne = function(index) {
+            console.log("MY INDEX : ", index);
+            $scope.produits[index].nombre = $scope.produits[index].nombre + 1;
+            calculerSomme();
+        }
+
+        $scope.removeOne = function(index) {
+            if ($scope.produits[index].nombre > 0) {
+                $scope.produits[index].nombre = $scope.produits[index].nombre - 1;
+                calculerSomme();
+            }
+        }
+
+        function calculerSomme() {
+            $scope.sommeTotale = 0
+            $scope.quantiteTotale = 0;
+            for (var i = 0; i < $scope.produits.length; i++) {
+                $scope.sommeTotale += $scope.produits[i].prixU * $scope.produits[i].nombre;
+                $scope.quantiteTotale += $scope.produits[i].nombre;
+            }
+        }
+
+        function computeMessage() {
+
+            for (var i = 0; i < $scope.produits.length; i++) {
+
+                if ($scope.produits[i].nombre > 0) {
+                    $scope.message += $scope.produits[i].nom + " \t " + " : " + $scope.produits[i].nombre + "\n";
+                    var item = {
+                        nom: $scope.produits[i].nom,
+                        nombre: $scope.produits[i].nombre
+                    }
+                    $scope.items.push(item);
+                }
+            }
+
+        }
+
+        $scope.envoyerCommande = function() {
+            //var message = "Bonjour BRACONGO, \n J'organise une réception dans laquelle j'attends " + $scope.loginData.nbrPlace + ' invités. \n Le prix estimé par la plate-forme est de ' + $scope.prixG + '$.\n Nom : ' + $scope.data.nom + '\n Email : ' + $scope.data.mail + '\n Téléphone : ' + $scope.data.tel
+
+            if (window.plugins && window.plugins.emailComposer) {
+                window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+                            console.log('Response -> ' + result)
+                        },
+                        'Commande Spéciale : ' + $scope.numero, // Subject
+                        $scope.message, // Body
+                        ['acomm@bracongo.cd'], // To
+                        null, // CC
+                        null, // BCC
+                        false, // isHTML
+                        null, // Attachments
+                        null) // Attachment Data
+            }
+            $scope.closeModal()
+        }
+
+
+        function showPopup(title, template) {
+            var alertPopup = $ionicPopup.alert({
+                title: title,
+                template: template
+            })
+            alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone')
+            })
+        }
 
         $scope.calculer = function() {
-                console.log("lol");
-                console.log($scope.produits);
+                calculerSomme();
+                if ($scope.sommeTotale == 0) {
+                    $cordovaToast.show('Veullez choisir au moins un produit', 'long', 'bottom').then(function(success) {}, function(error) {})
+                } else {
+                    computeMessage();
+                    var commande = {
+                        client: $scope.numero,
+                        items: $scope.items
+                    }
+                    show();
+                    BackendApi.sendCommande(commande).then(function(result) {
+                            //console.log("received : ", JSON.stringify(result));
+                            $scope.result = result.data.payload;
+                            hide();
+                            showPopup("Confirmation", $scope.result.contenu);
+                        })
+                        // $scope.envoyerCommande();
+                }
+
             }
             // Activate ink for controller
         ionicMaterialInk.displayEffect();
@@ -1477,6 +1733,10 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.isExpanded = false;
     $scope.$parent.setExpanded(false);
     $scope.$parent.setHeaderFab(false);
+    $scope.numero = null;
+    $scope.loaded = 0;
+
+
 
     function show() {
         $ionicLoading.show({
@@ -1495,12 +1755,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $state.go('app.accueil')
     } else {
         show();
-        BackendApi.getCustomerInfos(2006010058).then(function(result) {
-            console.log("received : ", JSON.stringify(result));
-            $scope.customerInfos = result.data.payload;
-            console.log("RESULT " + JSON.stringify($scope.customerInfos));
-            hide();
+        Application.getNumeroCompte().then(function(value) {
+            $scope.numero = value
+                // console.log("Le nom du user",$scope.nom)
+            BackendApi.getCustomerInfos($scope.numero).then(function(result) {
+                //console.log("received : ", JSON.stringify(result));
+                $scope.customerInfos = result.data.payload;
+                //console.log("RESULT " + JSON.stringify($scope.customerInfos));
+                $scope.loaded = 1;
+                hide();
+            })
         })
+
     }
 
     // Set Motion
@@ -1527,6 +1793,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.isExpanded = false;
         $scope.$parent.setExpanded(false);
         $scope.$parent.setHeaderFab(false);
+        $scope.loaded = 0;
+        $scope.numero = null;
+        $scope.password = null;
+
+        Application.getNumeroCompte().then(function(value) {
+            $scope.numero = value
+        })
+        Application.getPassword().then(function(value) {
+            $scope.password = value
+        })
 
         function show() {
             $ionicLoading.show({
@@ -1540,36 +1816,89 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         };
         $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
         $scope.venteInfos = null;
+        $scope.venteJourInfos = null;
         $scope.remise = null;
         $scope.histo = [];
+        $scope.hitoJours = [];
         $scope.labels = [];
+        $scope.labelsJour = [];
         $scope.data = [];
+        $scope.dataJour = [];
+        $scope.dateDebut = null;
+        $scope.datefin = null;
+        $scope.dataBiMois = [];
+        $scope.dataBgMois = [];
+        $scope.dataPetMois = [];
+        $scope.dataBiJour = [];
+        $scope.dataBgJour = [];
+        $scope.dataPetJour = [];
+        $scope.series = ['BI', 'BG', 'PET'];
+        $scope.dataMoisGraph = [];
+        $scope.dataJourGraph = [];
 
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             $state.go('app.accueil')
         } else {
             show();
-            BackendApi.getVenteInfos(2003052979, 'password').then(function(result) {
-                console.log("received : ", JSON.stringify(result));
-                $scope.venteInfos = result.data.payload;
-                $scope.remise = $scope.venteInfos.remise;
-                $scope.histo = $scope.venteInfos.venteItems;
-                console.log("RESULT " + JSON.stringify($scope.venteInfos));
-                console.log("HISTO " + JSON.stringify($scope.histo));
-                getLabels($scope.histo);
-                console.log("labels " + JSON.stringify($scope.labels));
-                console.log("data " + JSON.stringify($scope.data));
-                hide();
+            Application.getNumeroCompte().then(function(value) {
+                $scope.numero = value
+                Application.getPassword().then(function(value) {
+                    $scope.password = value
+                    BackendApi.getVenteInfos($scope.numero, $scope.password).then(function(result) {
+                        console.log("received : ", JSON.stringify(result));
+                        $scope.venteInfos = result.data.payload;
+                        $scope.remise = $scope.venteInfos.remise;
+                        $scope.chiffreAffaire = $scope.venteInfos.chiffreAffaire;
+                        //$scope.histo = $scope.venteInfos.venteItems;
+                        //$scope.hitoJours = $scope.venteInfos.venteJourItems;
+                        $scope.histo = $scope.venteInfos.ventesMois;
+                        $scope.hitoJours = $scope.venteInfos.ventesJours;
+                        $scope.dateDebut = new Date($scope.venteInfos.dateDebutRemise);
+                        $scope.datefin = new Date($scope.venteInfos.dateFinRemise);
+                        console.log("RESULT " + JSON.stringify($scope.venteInfos));
+                        console.log("HISTO " + JSON.stringify($scope.histo));
+                        getMonthLabels($scope.histo);
+                        getDayLabels($scope.hitoJours);
+
+                        console.log("labels " + JSON.stringify($scope.labels));
+                        console.log("data " + JSON.stringify($scope.data));
+                        hide();
+                        $scope.loaded = 1;
+                    })
+                })
             })
+
+
         }
 
-        function getLabels(histoData) {
+        function getDayLabels(histoData) {
             var result = [];
             for (var i = 0; i < histoData.length; i++) {
-                $scope.labels.push(getMonthByNumber(histoData[i].mois));
-                $scope.data.push(histoData[i].quantite);
+                //$scope.labelsJour.push(histoData[i].jour);
+                // $scope.dataJour.push(histoData[i].quantite);
+                $scope.labelsJour.push(histoData[i].date);
+                $scope.dataBiJour.push(histoData[i].quantiteBiere);
+                $scope.dataBgJour.push(histoData[i].quantiteBg);
+                $scope.dataPetJour.push(histoData[i].quantitePet);
             }
+            $scope.dataJourGraph.push($scope.dataBiJour);
+            $scope.dataJourGraph.push($scope.dataBgJour);
+            $scope.dataJourGraph.push($scope.dataPetJour);
+        }
+
+        function getMonthLabels(histoData) {
+            var result = [];
+            for (var i = 0; i < histoData.length; i++) {
+                $scope.labels.push($scope.getMonthByNumber(histoData[i].date));
+                //$scope.data.push(histoData[i].quantite);
+                $scope.dataBiMois.push(histoData[i].quantiteBiere);
+                $scope.dataBgMois.push(histoData[i].quantiteBg);
+                $scope.dataPetMois.push(histoData[i].quantitePet);
+            }
+            $scope.dataMoisGraph.push($scope.dataBiMois);
+            $scope.dataMoisGraph.push($scope.dataBgMois);
+            $scope.dataMoisGraph.push($scope.dataPetMois);
         }
 
         $scope.options = {
@@ -1586,7 +1915,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             }
         };
 
-        function getMonthByNumber(number) {
+        $scope.getMonthByNumber = function(number) {
             var mois;
             switch (number) {
                 case 1:
@@ -1679,6 +2008,105 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         // Set Ink
         ionicMaterialInk.displayEffect()
     })
+
+.controller('PlainteCtrl', function($scope, $http, $ionicLoading, $state, ionicMaterialMotion, ionicMaterialInk, serviceFactory, Connectivity, $cordovaToast, Application, $ionicPopup, BackendApi) {
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.$parent.setHeaderFab('right');
+    $scope.plainte = {};
+    $scope.numero = null;
+    $scope.message = "";
+
+    Application.getNumeroCompte().then(function(value) {
+        $scope.numero = value
+    })
+
+
+    function show() {
+        $ionicLoading.show({
+            template: '<p>Envoie en cours...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in'
+        })
+    }
+
+    function hide() {
+        $ionicLoading.hide()
+    }
+
+
+    function computeMessage() {
+
+        for (var i = 0; i < $scope.produits.length; i++) {
+
+            if ($scope.produits[i].nombre > 0) {
+                $scope.message += $scope.produits[i].nom + " \t " + " : " + $scope.produits[i].nombre + "\n";
+                var item = {
+                    nom: $scope.produits[i].nom,
+                    nombre: $scope.produits[i].nombre
+                }
+                $scope.items.push(item);
+            }
+        }
+
+    }
+
+    $scope.envoyerCommande = function() {
+        //var message = "Bonjour BRACONGO, \n J'organise une réception dans laquelle j'attends " + $scope.loginData.nbrPlace + ' invités. \n Le prix estimé par la plate-forme est de ' + $scope.prixG + '$.\n Nom : ' + $scope.data.nom + '\n Email : ' + $scope.data.mail + '\n Téléphone : ' + $scope.data.tel
+
+        if (window.plugins && window.plugins.emailComposer) {
+            window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+                        console.log('Response -> ' + result)
+                    },
+                    'Commande Spéciale : ' + $scope.numero, // Subject
+                    $scope.message, // Body
+                    ['acomm@bracongo.cd'], // To
+                    null, // CC
+                    null, // BCC
+                    false, // isHTML
+                    null, // Attachments
+                    null) // Attachment Data
+        }
+        $scope.closeModal()
+    }
+
+
+    function showPopup(title, template) {
+        var alertPopup = $ionicPopup.alert({
+            title: title,
+            template: template
+        })
+        alertPopup.then(function(res) {
+            console.log('Thank you for not eating my delicious ice cream cone')
+        })
+    }
+
+    $scope.envoyerPlainte = function() {
+            //$scope.plainte.client = $scope.numero;
+            console.log("LA PANNE", $scope.plainte)
+
+            //  computeMessage();
+            var plainte = {
+                client: $scope.numero,
+                plainte: $scope.plainte
+            }
+            console.log("LA PANNE", plainte);
+            show();
+            BackendApi.sendPlainte(plainte).then(function(result) {
+                    //console.log("received : ", JSON.stringify(result));
+                    $scope.result = result.data.payload;
+                    hide();
+                    showPopup("Confirmation", $scope.result.contenu);
+                    $scope.plainte = {};
+                })
+                // $scope.envoyerCommande();
+
+
+        }
+        // Activate ink for controller
+    ionicMaterialInk.displayEffect();
+})
 
 .controller('OfflineCtrl', function($scope, $stateParams, $ionicSlideBoxDelegate, $timeout, $ionicLoading, ionicMaterialMotion, ionicMaterialInk) {
         // Set Header
@@ -1949,8 +2377,8 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     })
     .factory('BackendApi', function($rootScope, $cordovaNetwork, $http) {
         return {
-            createAccount: function(numeroCompte) {
-                return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/create/" + numeroCompte).then(function(response) {
+            createAccount: function(numeroCompte, password) {
+                return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/create/" + numeroCompte + "/" + password).then(function(response) {
                     return response;
                 });
             },
@@ -1963,6 +2391,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             getVenteInfos: function(numeroCompte, password) {
                 return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/ventes/" + numeroCompte + "/" + password).then(function(response) {
                     return response;
+                });
+            },
+            sendCommande: function(commande) {
+                return $http.post("https://api.bracongo-cd.com:8443/clientapi/rest/commandes/send/", commande).then(function(res) {
+                    return res;
+                });
+            },
+            sendPlainte: function(plainte) {
+                return $http.post("https://api.bracongo-cd.com:8443/clientapi/rest/plaintes/send/", plainte).then(function(res) {
+                    return res;
                 });
             },
         }
@@ -1983,6 +2421,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         var refAccueilImage = database.child('accueilImage')
         var refFeteImage = database.child('feteImage')
         var refChateauxImage = database.child('chateauxImage')
+        var refPrixProduits = database.child('prixProduits');
         var localEvents = []
         var localJeux = []
         var localCampagnes = []
@@ -1997,6 +2436,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         var localAccueilImages = []
         var localFeteImages = []
         var localChateauxImages = []
+        var localPrixProduits = [];
         var i
 
 
@@ -2142,7 +2582,18 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                     }
                 }
                 return result
-            }
+            },
+            getAllPrixProduit: function() {
+                localPrixProduits = $firebaseArray(refPrixProduits)
+                return $firebaseArray(refPrixProduits)
+            },
+            getOnePrixProduit: function(id) {
+                for (i = 0; i < localPrixProduits.length; i++) {
+                    if (localPrixProduits[i].$id == id) {
+                        return localPrixProduits[i]
+                    }
+                }
+            },
         }
     })
 
@@ -2292,7 +2743,33 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $cordovaNativeStorage.setItem('concoursBadge', badge).then(function() {}, function(error) {
                 console.log(error)
             })
-        }
+        },
+        setNumeroCompte: function(numero) {
+            $cordovaNativeStorage.setItem('numeroCompte', numero).then(function() {}, function(error) {
+                console.log(error)
+            })
+        },
+        setPassword: function(password) {
+            $cordovaNativeStorage.setItem('password', password).then(function() {}, function(error) {
+                console.log(error)
+            })
+        },
+        getNumeroCompte: function() {
+            return $cordovaNativeStorage.getItem('numeroCompte').then(function(value) {
+                return value
+            }, function(error) {
+                console.log(error)
+                return 0
+            })
+        },
+        getPassword: function() {
+            return $cordovaNativeStorage.getItem('password').then(function(value) {
+                return value
+            }, function(error) {
+                console.log(error)
+                return 0
+            })
+        },
     }
 })
 

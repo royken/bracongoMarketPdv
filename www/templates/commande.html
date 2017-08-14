@@ -1,19 +1,59 @@
-<ion-view view-title="Commande">
-    <ion-content ng-class="{expanded:isExpanded}">
-        <div class="list">
-            <div class="card" ng-repeat="item in produits">
-                <label class="item item-input">
-                <span class="input-label">{{item.nom}} : </span>
-                <label class="item item-input">
-                    <input type="number" placeholder="" ng-model="item.nombre" style="border-bottom: 1px solid gray; padding-right: 5%; ">
-                </label>
-                </label>
+<ion-view view-title="Commandes Spéciales">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}">
+
+        <div ng-show=" loaded > 0">
+            <div class="card">
+                <div class="item item-divider center-text-header">
+                    <h2 style="color:#ffffff"> Note</h2>
+                </div>
+                <div class="item item-text-wrap ">
+                    <p>Pour vos évènements spéciaux uniquement </p>
+                    <p>Note : Les commandes envoyées ce jour ({{now | date: 'dd/MM/yyyy'}}) pourront être livrées le ({{day2 | date: 'dd/MM/yyyy'}}) sous réserve de la disponibilité du stock </p>
+                </div>
             </div>
-        </div>
-        <div style="padding: 2%; margin-top: 2%">
-            <button class="button button-dark " ng-click="calculer()" style="width: 80%; margin-left: 10%;">
+            <div class="cols-12 blue">
+                <div class="cols-12 blue white" ng-repeat="item in produits track by $index">
+                    <div class="cols-3">
+                        <img src="{{item.image}}" class="logo">
+                    </div>
+                    <div class="cols-6">
+                        <p class="name">
+                            {{item.nom}}
+                        </p>
+                        <p>
+                            <span class="price">{{item.prixU}} FC</span> <span class="occur">{{item.nombre}}</span>
+                        </p>
+                    </div>
+                    <div class="cols-2">
+                        <div class="cols-12">
+                            <button class="cols-6 btn-add" ng-click="addOne($index)">
+						+
+					</button>
+                            <button class="cols-6 btn-add" ng-click="removeOne($index)">
+						-
+					</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="cols-12">
+                    <button class=" cols-12 btn-total">
+				<span class="left">
+					TOTAL
+				</span>
+				<span class="rigth">
+					{{sommeTotale}} FC | {{quantiteTotale}} CS
+				</span>
+			</button>
+                </div>
+            </div>
+
+            <div style="padding: 2%; margin-top: 2%">
+                <button class="button " ng-click="calculer()" style="width: 80%; margin-left: 10%; background-color: #55acee; color: #ffffff">
                   Envoyer
             </button>
+            </div>
         </div>
+
     </ion-content>
 </ion-view>

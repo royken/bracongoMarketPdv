@@ -1,0 +1,51 @@
+<ion-view view-title="Plaintes">
+    <ion-content class="contents" ng-class="{expanded:isExpanded}">
+
+        <div>
+            <form ng-submit="postuler(user, motpass)">
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <div class="list">
+                            <label class="item item-input item-select">
+                    <div class="input-label">
+                        Type
+                    </div>
+                    <select ng-model="plainte.typePlainte">
+                        <option>PRODUITS HORS NORME</option>
+                        <option selected>FRIGO EN PANNE</option>
+                        <option>Besoin PLV</option>
+                        <option>Besoin MATERIEL</option>
+                    </select>
+                </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row responsive-sm">
+                    <div class="col">
+
+                        <span class="input-label">Description</span>
+
+
+                    </div>
+                </div>
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <textarea rows="3" type="text" placeholder="Description" ng-model="plainte.contenu" style="width:95%">
+                            </textarea>
+                    </div>
+                </div>
+                <div class="row responsive-sm">
+                    <div class="col">
+                        <font color="red" ng-model="error">{{error}}</font>
+                    </div>
+                    <div class="col">
+                        <button ng-disabled="!plainte.typePlainte  || !plainte.contenu" class="button button-block button-assertive" type="submit" ng-click="envoyerPlainte()"> 
+               <i class="ion-android-send">Envoyer</i>
+          </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </ion-content>
+</ion-view>

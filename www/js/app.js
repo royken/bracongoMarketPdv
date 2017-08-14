@@ -50,7 +50,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
             result = value;
             console.log("result1 ", result);
         });
-        var state = "app.accueil";
+
+        var state = "app.login2";
         if (result === "true") {
             state = "app.login";
         }
@@ -71,7 +72,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
     $httpProvider.defaults.useXDomain = true;
     $ionicCloudProvider.init({
         "core": {
-            "app_id": "da4cdfc4"
+            "app_id": "16533f48"
         },
         "push": {
             "sender_id": "513360151004",
@@ -327,6 +328,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 }
             }
         })
+        .state('app.login2', {
+            cache: false,
+            url: '/login2',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/login2.html',
+                    controller: 'Login2Ctrl'
+                },
+                'fabContent': {
+                    template: ''
+                }
+            }
+        })
         .state('app.accueil', {
             url: '/accueil',
             views: {
@@ -540,6 +554,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 'menuContent': {
                     templateUrl: 'templates/vente.html',
                     controller: 'VenteCtrl'
+                },
+                'fabContent': {
+                    template: ''
+                }
+            }
+        })
+        .state('app.plainte', {
+            url: '/plainte',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/plainte.html',
+                    controller: 'PlainteCtrl'
                 },
                 'fabContent': {
                     template: ''
