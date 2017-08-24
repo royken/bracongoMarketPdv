@@ -3,7 +3,7 @@
 
 angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCordova'])
 
-.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $state, $ionicPopover, $timeout, $ionicPlatform, $cordovaBadge, ApiEndpoint, Application) {
+.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $state, $ionicPopover, $timeout, $ionicPlatform, $cordovaBadge, ApiEndpoint, Application, $ionicPush) {
     // Form data for the login modal
     $scope.loginData = {}
     $scope.isExpanded = false
@@ -12,8 +12,10 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     var vm = this
 
     $ionicPlatform.ready(function() {
-        // $cordovaBadge.promptForPermission()
+        $cordovaBadge.promptForPermission()
     })
+
+
 
     $rootScope.$on('cloud:push:notification', function(event, data) {
         var msg = data.message
@@ -45,11 +47,21 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 Application.setConcoursBadge(badge + 1)
             })
         }
+        if (menu === 'messages') {
+            var badge = 0
+            Application.getMessagesBadge().then(function(value) {
+                badge = value
+                Application.setMessagesBadge(badge + 1)
+            }, function(error) {
+                Application.setMessagesBadge(badge + 1)
+            })
+        }
         $cordovaBadge.increase().then(function() {
             // You have permission, badge increased.
         }, function(err) {
             // You do not have permission.
         })
+
 
     })
 
@@ -155,12 +167,16 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.badgeConcours = value
     })
 
-    /*   $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours).then(function() {
+    Application.getMessagesBadge().then(function(value) {
+        $scope.badgeMessages = value
+    })
+
+    $cordovaBadge.set($scope.badgeEvent + $scope.badgeCampagne + $scope.badgeConcours + $scope.badgeMessages).then(function() {
         // You have permission, badge set.
     }, function(err) {
         // You do not have permission.
     })
-    */
+
 
     // $scope.badgeConcours  = 1
 
@@ -239,6 +255,9 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     $scope.plaintePage = function() {
         $state.go('app.plainte');
     }
+    $scope.messagePage = function() {
+        $state.go('app.messages');
+    }
 
     /*      $cordovaBadge.clear().then(function() {
                   // You have permission, badge cleared.
@@ -249,7 +268,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
     ionicMaterialInk.displayEffect()
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $ionicLoading, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast, BackendApi, $ionicPopup) {
+.controller('LoginCtrl', function($scope, $timeout, $ionicLoading, $state, $ionicHistory, $stateParams, ionicMaterialInk, Application, firebase, Connectivity, $cordovaToast, BackendApi, $ionicPopup, $ionicPush) {
         $scope.$parent.clearFabs()
         $scope.loginData = {}
         $scope.isExpanded = false
@@ -314,6 +333,17 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                                 disableBack: true
                             })
                             Application.setInitialRun(false);
+                            Application.getToken().then(function(value) {
+                                var token = value;
+                                if (token.length > 4) {
+                                    var objet = {
+                                        client: $scope.loginResult.numclient,
+                                        password: $scope.loginResult.message,
+                                        token: token
+                                    }
+                                    BackendApi.saveClient(objet);
+                                }
+                            })
                             $state.go('app.accueil')
                         }
                         if ($scope.loginResult.status == 1) {
@@ -321,10 +351,23 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                             Application.setNumeroCompte($scope.loginResult.numclient);
                             Application.setPassword($scope.loginResult.message);
                             $ionicHistory.nextViewOptions({
-                                disableAnimate: true,
-                                disableBack: true
-                            })
+                                    disableAnimate: true,
+                                    disableBack: true
+                                })
+                                /** saveClient */
                             Application.setInitialRun(false);
+                            Application.getToken().then(function(value) {
+                                var token = value;
+                                if (token.length > 4) {
+                                    var objet = {
+                                        client: $scope.loginResult.numclient,
+                                        password: $scope.loginResult.message,
+                                        token: token
+                                    }
+                                    BackendApi.saveClient(objet);
+                                }
+                            })
+
                             $state.go('app.accueil');
                         }
                         if ($scope.loginResult.status == 2) {
@@ -365,10 +408,10 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         }, 0)
         ionicMaterialInk.displayEffect()
 
-        Application.getNumeroCompte().then(function(value) {
-            $scope.numero = value
-        })
-
+        /* Application.getNumeroCompte().then(function(value) {
+             $scope.numero = value
+         })
+         */
         function show() {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -380,8 +423,6 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             $ionicLoading.hide();
         };
 
-
-
         $scope.login = function() {
             // console.log("credentials",$scope.loginData)
 
@@ -389,7 +430,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
             } else {
                 show();
-                BackendApi.createAccount($scope.numero, $scope.loginData.password).then(function(result) {
+                BackendApi.createAccount($scope.loginData.compte, $scope.loginData.password).then(function(result) {
                     console.log("received : ", JSON.stringify(result));
 
                     $scope.success = result.data.success;
@@ -609,7 +650,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         $scope.otherShare = function() {
             //  var imageUrl = decodeURIComponent($scope.event.image);
             var options = {
-                message: $scope.event.titre + "\n" + $scope.event.date, // not supported on some apps (Facebook, Instagram)
+                message: $scope.event.titre + "\n" + scope.event.description + "\n" + $scope.event.date, // not supported on some apps (Facebook, Instagram)
                 subject: $scope.event.titre, // fi. for email : Normalement $scope.event.description
                 files: [$scope.event.image], // an array of filenames either locally or remotely
                 url: '',
@@ -1787,22 +1828,203 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
 })
 
 .controller('VenteCtrl', function($scope, $ionicLoading, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, Application, BackendApi, Connectivity) {
+    // Set Header
+    $scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $scope.loaded = 0;
+    $scope.numero = null;
+    $scope.password = null;
+
+    Application.getNumeroCompte().then(function(value) {
+        $scope.numero = value
+    })
+    Application.getPassword().then(function(value) {
+        $scope.password = value
+    })
+
+    function show() {
+        $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+            animation: 'fade-in',
+        });
+    };
+
+    function hide() {
+        $ionicLoading.hide();
+    };
+    $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
+    $scope.venteInfos = null;
+    $scope.venteJourInfos = null;
+    $scope.remise = null;
+    $scope.histo = [];
+    $scope.hitoJours = [];
+    $scope.labels = [];
+    $scope.labelsJour = [];
+    $scope.data = [];
+    $scope.dataJour = [];
+    $scope.dateDebut = null;
+    $scope.datefin = null;
+    $scope.dataBiMois = [];
+    $scope.dataBgMois = [];
+    $scope.dataPetMois = [];
+    $scope.dataBiJour = [];
+    $scope.dataBgJour = [];
+    $scope.dataPetJour = [];
+    $scope.series = ['BI', 'BG', 'PET'];
+    $scope.dataMoisGraph = [];
+    $scope.dataJourGraph = [];
+
+    if (Connectivity.ifOffline()) {
+        $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
+        $state.go('app.accueil')
+    } else {
+        show();
+        Application.getNumeroCompte().then(function(value) {
+            $scope.numero = value
+            Application.getPassword().then(function(value) {
+                $scope.password = value
+                BackendApi.getVenteInfos($scope.numero, $scope.password).then(function(result) {
+                    console.log("received : ", JSON.stringify(result));
+                    $scope.venteInfos = result.data.payload;
+                    $scope.remise = $scope.venteInfos.remise;
+                    $scope.chiffreAffaire = $scope.venteInfos.chiffreAffaire;
+                    //$scope.histo = $scope.venteInfos.venteItems;
+                    //$scope.hitoJours = $scope.venteInfos.venteJourItems;
+                    $scope.histo = $scope.venteInfos.ventesMois;
+                    $scope.hitoJours = $scope.venteInfos.ventesJours;
+                    $scope.dateDebut = new Date($scope.venteInfos.dateDebutRemise);
+                    $scope.datefin = new Date($scope.venteInfos.dateFinRemise);
+                    console.log("RESULT " + JSON.stringify($scope.venteInfos));
+                    console.log("HISTO " + JSON.stringify($scope.histo));
+                    getMonthLabels($scope.histo);
+                    getDayLabels($scope.hitoJours);
+
+                    console.log("labels " + JSON.stringify($scope.labels));
+                    console.log("data " + JSON.stringify($scope.data));
+                    hide();
+                    $scope.loaded = 1;
+                })
+            })
+        })
+
+
+    }
+
+    function getDayLabels(histoData) {
+        var result = [];
+        for (var i = 0; i < histoData.length; i++) {
+            //$scope.labelsJour.push(histoData[i].jour);
+            // $scope.dataJour.push(histoData[i].quantite);
+            $scope.labelsJour.push(histoData[i].date);
+            $scope.dataBiJour.push(histoData[i].quantiteBiere);
+            $scope.dataBgJour.push(histoData[i].quantiteBg);
+            $scope.dataPetJour.push(histoData[i].quantitePet);
+        }
+        $scope.dataJourGraph.push($scope.dataBiJour);
+        $scope.dataJourGraph.push($scope.dataBgJour);
+        $scope.dataJourGraph.push($scope.dataPetJour);
+    }
+
+    function getMonthLabels(histoData) {
+        var result = [];
+        for (var i = 0; i < histoData.length; i++) {
+            $scope.labels.push($scope.getMonthByNumber(histoData[i].date));
+            //$scope.data.push(histoData[i].quantite);
+            $scope.dataBiMois.push(histoData[i].quantiteBiere);
+            $scope.dataBgMois.push(histoData[i].quantiteBg);
+            $scope.dataPetMois.push(histoData[i].quantitePet);
+        }
+        $scope.dataMoisGraph.push($scope.dataBiMois);
+        $scope.dataMoisGraph.push($scope.dataBgMois);
+        $scope.dataMoisGraph.push($scope.dataPetMois);
+    }
+
+    $scope.options = {
+        animation: true,
+        showScale: true,
+        responsive: true,
+        scales: {
+            yAxes: [{
+                id: 'y-axis-1',
+                type: 'linear',
+                display: true,
+                position: 'left'
+            }]
+        }
+    };
+
+    $scope.getMonthByNumber = function(number) {
+        var mois;
+        switch (number) {
+            case 1:
+                mois = "Janvier";
+                break;
+            case 2:
+                mois = "Février";
+                break;
+            case 3:
+                mois = "Mars";
+                break;
+            case 4:
+                mois = "Avril";
+                break;
+            case 5:
+                mois = "Mai";
+                break;
+            case 6:
+                mois = "Juin";
+                break;
+            case 7:
+                mois = "Juillet";
+                break;
+            case 8:
+                mois = "Août";
+                break;
+            case 9:
+                mois = "Septembre";
+                break;
+            case 10:
+                mois = "Octobre";
+                break;
+            case 11:
+                mois = "Novembre";
+                break;
+            case 12:
+                mois = "Décembre";
+                break;
+        }
+        return mois;
+    }
+
+    // Set Motion
+    $timeout(function() {
+        ionicMaterialMotion.slideUp({
+            selector: '.slide-up'
+        });
+    }, 300);
+
+    $timeout(function() {
+        ionicMaterialMotion.fadeSlideInRight({
+            startVelocity: 3000
+        });
+    }, 700);
+
+    // Set Ink
+    ionicMaterialInk.displayEffect();
+})
+
+.controller('MessageCtrl', function($scope, $ionicLoading, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, Application, BackendApi, Connectivity) {
         // Set Header
         $scope.$parent.showHeader();
         $scope.$parent.clearFabs();
         $scope.isExpanded = false;
         $scope.$parent.setExpanded(false);
         $scope.$parent.setHeaderFab(false);
-        $scope.loaded = 0;
         $scope.numero = null;
-        $scope.password = null;
-
-        Application.getNumeroCompte().then(function(value) {
-            $scope.numero = value
-        })
-        Application.getPassword().then(function(value) {
-            $scope.password = value
-        })
+        $scope.loaded = 0;
 
         function show() {
             $ionicLoading.show({
@@ -1814,27 +2036,7 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         function hide() {
             $ionicLoading.hide();
         };
-        $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
-        $scope.venteInfos = null;
-        $scope.venteJourInfos = null;
-        $scope.remise = null;
-        $scope.histo = [];
-        $scope.hitoJours = [];
-        $scope.labels = [];
-        $scope.labelsJour = [];
-        $scope.data = [];
-        $scope.dataJour = [];
-        $scope.dateDebut = null;
-        $scope.datefin = null;
-        $scope.dataBiMois = [];
-        $scope.dataBgMois = [];
-        $scope.dataPetMois = [];
-        $scope.dataBiJour = [];
-        $scope.dataBgJour = [];
-        $scope.dataPetJour = [];
-        $scope.series = ['BI', 'BG', 'PET'];
-        $scope.dataMoisGraph = [];
-        $scope.dataJourGraph = [];
+        $scope.messages = null;
 
         if (Connectivity.ifOffline()) {
             $cordovaToast.show('Pas de connexion internet, veuillez essayer plus tard', 'long', 'bottom').then(function(success) {}, function(error) {})
@@ -1845,117 +2047,15 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 $scope.numero = value
                 Application.getPassword().then(function(value) {
                     $scope.password = value
-                    BackendApi.getVenteInfos($scope.numero, $scope.password).then(function(result) {
-                        console.log("received : ", JSON.stringify(result));
-                        $scope.venteInfos = result.data.payload;
-                        $scope.remise = $scope.venteInfos.remise;
-                        $scope.chiffreAffaire = $scope.venteInfos.chiffreAffaire;
-                        //$scope.histo = $scope.venteInfos.venteItems;
-                        //$scope.hitoJours = $scope.venteInfos.venteJourItems;
-                        $scope.histo = $scope.venteInfos.ventesMois;
-                        $scope.hitoJours = $scope.venteInfos.ventesJours;
-                        $scope.dateDebut = new Date($scope.venteInfos.dateDebutRemise);
-                        $scope.datefin = new Date($scope.venteInfos.dateFinRemise);
-                        console.log("RESULT " + JSON.stringify($scope.venteInfos));
-                        console.log("HISTO " + JSON.stringify($scope.histo));
-                        getMonthLabels($scope.histo);
-                        getDayLabels($scope.hitoJours);
-
-                        console.log("labels " + JSON.stringify($scope.labels));
-                        console.log("data " + JSON.stringify($scope.data));
-                        hide();
+                    BackendApi.getMessages($scope.numero, $scope.password).then(function(result) {
+                        // console.log("received : ", JSON.stringify(result));
+                        $scope.messages = result.data.payload;
                         $scope.loaded = 1;
+                        hide();
                     })
                 })
             })
 
-
-        }
-
-        function getDayLabels(histoData) {
-            var result = [];
-            for (var i = 0; i < histoData.length; i++) {
-                //$scope.labelsJour.push(histoData[i].jour);
-                // $scope.dataJour.push(histoData[i].quantite);
-                $scope.labelsJour.push(histoData[i].date);
-                $scope.dataBiJour.push(histoData[i].quantiteBiere);
-                $scope.dataBgJour.push(histoData[i].quantiteBg);
-                $scope.dataPetJour.push(histoData[i].quantitePet);
-            }
-            $scope.dataJourGraph.push($scope.dataBiJour);
-            $scope.dataJourGraph.push($scope.dataBgJour);
-            $scope.dataJourGraph.push($scope.dataPetJour);
-        }
-
-        function getMonthLabels(histoData) {
-            var result = [];
-            for (var i = 0; i < histoData.length; i++) {
-                $scope.labels.push($scope.getMonthByNumber(histoData[i].date));
-                //$scope.data.push(histoData[i].quantite);
-                $scope.dataBiMois.push(histoData[i].quantiteBiere);
-                $scope.dataBgMois.push(histoData[i].quantiteBg);
-                $scope.dataPetMois.push(histoData[i].quantitePet);
-            }
-            $scope.dataMoisGraph.push($scope.dataBiMois);
-            $scope.dataMoisGraph.push($scope.dataBgMois);
-            $scope.dataMoisGraph.push($scope.dataPetMois);
-        }
-
-        $scope.options = {
-            animation: true,
-            showScale: true,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    id: 'y-axis-1',
-                    type: 'linear',
-                    display: true,
-                    position: 'left'
-                }]
-            }
-        };
-
-        $scope.getMonthByNumber = function(number) {
-            var mois;
-            switch (number) {
-                case 1:
-                    mois = "Janvier";
-                    break;
-                case 2:
-                    mois = "Février";
-                    break;
-                case 3:
-                    mois = "Mars";
-                    break;
-                case 4:
-                    mois = "Avril";
-                    break;
-                case 5:
-                    mois = "Mai";
-                    break;
-                case 6:
-                    mois = "Juin";
-                    break;
-                case 7:
-                    mois = "Juillet";
-                    break;
-                case 8:
-                    mois = "Août";
-                    break;
-                case 9:
-                    mois = "Septembre";
-                    break;
-                case 10:
-                    mois = "Octobre";
-                    break;
-                case 11:
-                    mois = "Novembre";
-                    break;
-                case 12:
-                    mois = "Décembre";
-                    break;
-            }
-            return mois;
         }
 
         // Set Motion
@@ -2383,13 +2483,19 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 });
             },
 
+            getVenteInfos: function(numeroCompte, password) {
+                return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/ventes/" + numeroCompte + "/" + password).then(function(response) {
+                    return response;
+                });
+            },
+
             getCustomerInfos: function(numeroCompte) {
                 return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/" + numeroCompte).then(function(response) {
                     return response;
                 });
             },
-            getVenteInfos: function(numeroCompte, password) {
-                return $http.get("https://api.bracongo-cd.com:8443/backendapi/rest/client/ventes/" + numeroCompte + "/" + password).then(function(response) {
+            getMessages: function(numeroCompte, password) {
+                return $http.get("https://api.bracongo-cd.com:8443/clientapi/rest/messages/" + numeroCompte + "/" + password).then(function(response) {
                     return response;
                 });
             },
@@ -2400,6 +2506,12 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
             },
             sendPlainte: function(plainte) {
                 return $http.post("https://api.bracongo-cd.com:8443/clientapi/rest/plaintes/send/", plainte).then(function(res) {
+                    return res;
+                });
+            },
+            saveClient: function(client) {
+                console.log("J'envoie ===========", client);
+                return $http.post("https://api.bracongo-cd.com:8443/clientapi/rest/clients/send/", client).then(function(res) {
                     return res;
                 });
             },
@@ -2729,6 +2841,14 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
                 return 0
             })
         },
+        getMessagesBadge: function() {
+            return $cordovaNativeStorage.getItem('messagesBadge').then(function(value) {
+                return value
+            }, function(error) {
+                console.log(error)
+                return 0
+            })
+        },
         setEventBadge: function(badge) {
             $cordovaNativeStorage.setItem('eventBadge', badge).then(function() {}, function(error) {
                 console.log(error)
@@ -2741,6 +2861,11 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         },
         setConcoursBadge: function(badge) {
             $cordovaNativeStorage.setItem('concoursBadge', badge).then(function() {}, function(error) {
+                console.log(error)
+            })
+        },
+        setMessagesBadge: function(badge) {
+            $cordovaNativeStorage.setItem('messagesBadge', badge).then(function() {}, function(error) {
                 console.log(error)
             })
         },
@@ -2765,6 +2890,19 @@ angular.module('starter.controllers', ['ionic', 'firebase', 'ionic.cloud', 'ngCo
         getPassword: function() {
             return $cordovaNativeStorage.getItem('password').then(function(value) {
                 return value
+            }, function(error) {
+                console.log(error)
+                return 0
+            })
+        },
+        setToken: function(token) {
+            $cordovaNativeStorage.setItem('token', token).then(function() {}, function(error) {
+                console.log(error)
+            })
+        },
+        getToken: function() {
+            return $cordovaNativeStorage.getItem('token').then(function(value) {
+                return value;
             }, function(error) {
                 console.log(error)
                 return 0

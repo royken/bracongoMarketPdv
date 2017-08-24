@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'ionMdInput', 'firebase', 'ngCordova', 'ngMap', 'ionic.rating', 'ngCordova.plugins.nativeStorage', 'youtube-embed', 'ionic.cloud', 'ngSanitize', 'ionic-letter-avatar', 'chart.js'])
 
-.run(function($ionicPlatform, $state, Application, $ionicPush, $cordovaBadge) {
+.run(function($ionicPlatform, $state, Application, $ionicPush, $cordovaBadge, BackendApi) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -41,6 +41,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
         }).then(function(t) {
             return $ionicPush.saveToken(t);
         }).then(function(t) {
+            // Application.saveToken(t.token);
+            var numero = null;
+            Application.getNumeroCompte().then(function(value) {
+                numero = value
+                Application.getPassword().then(function(value) {
+                    var password = value;
+                    if (numero.length > 5 && password.length > 2) {
+                        var objet = {
+                            client: numero,
+                            password: password,
+                            token: t.token
+                        }
+                        BackendApi.saveClient(objet);
+                    }
+                })
+            })
+            Application.setToken(t.token);
             console.log('Token saved:', t.token);
         });
 
@@ -566,6 +583,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic-material', 'io
                 'menuContent': {
                     templateUrl: 'templates/plainte.html',
                     controller: 'PlainteCtrl'
+                },
+                'fabContent': {
+                    template: ''
+                }
+            }
+        })
+        .state('app.messages', {
+            url: '/messages',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/messages.html',
+                    controller: 'MessageCtrl'
                 },
                 'fabContent': {
                     template: ''

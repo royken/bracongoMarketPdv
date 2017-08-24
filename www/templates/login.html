@@ -9,7 +9,7 @@
         </div>
         <div class="list" style="background-color: transparent important!;">
 
-            <ion-md-input placeholder="Numéro de compte" highlight-color="balanced" type="number" ng-model="loginData.compte"></ion-md-input>
+            <ion-md-input placeholder="Numéro de compte" highlight-color="balanced" ng-model="loginData.compte" pattern="[0-9]*"></ion-md-input>
             <ion-md-input placeholder="Mot de passe" highlight-color="balanced" type="password" ng-model="loginData.password"></ion-md-input>
             <ion-md-input placeholder="Confirmez mot de passe" highlight-color="balanced" type="password" ng-model="loginData.passwordConfirm"></ion-md-input>
             <!-- <ion-md-input placeholder="Mot de passe" highlight-color="energized" type="password" ng-model="loginData.passwd"></ion-md-input> -->
